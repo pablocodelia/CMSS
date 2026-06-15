@@ -1,41 +1,41 @@
-# Music Studio Suite - Project Tracking
+# Music Studio Suite - Seguimiento del Proyecto
 
-## 📋 Status Overview
-- **Objective:** Android Music Studio Suite (Metronome & Tuner).
-- **Current State:** Implementation complete but crashing on startup (immediate close).
-- **Package Name:** `com.musicstudiosuite`
-- **Compatibility:** AGP 8.7.3 / SDK 35.
-
----
-
-## ✅ Completed Tasks
-- [x] Initial Project Setup (Jetpack Compose).
-- [x] Metronome Engine Implementation (`AudioTrack`).
-- [x] Tuner Engine Implementation (`TarsosDSP` with custom Glue).
-- [x] Navigation & UI (Material 3).
-- [x] Downgrade AGP/Gradle for Android Studio compatibility.
-- [x] Refactor package name from `com.example...` to `com.musicstudiosuite`.
-- [x] Manual uninstallation and fresh install on device.
+## 📋 Resumen de Estado
+- **Objetivo:** Music Studio Suite para Android (Metrónomo y Afinador).
+- **Estado Actual:** Implementación completada, pero falla al iniciar (cierre inmediato).
+- **Nombre de Paquete:** `com.musicstudiosuite`
+- **Compatibilidad:** AGP 8.7.3 / SDK 35.
 
 ---
 
-## 🔍 Debugging Queue (Active)
-- [x] **Capture Stack Trace:** Completed.
-- [x] **Minimal Launcher Test:** Success! App opens with `MinimalActivity`.
-- [ ] **MainActivity Simplification:** Re-enable `MainActivity` with minimal content to check for class loading.
-- [ ] **Component Re-integration:** Gradually add Theme, Navigation, and Engines to identify the crashing component.
-- [ ] **Audio Hardware Check:** Verify if `AudioTrack` or `AudioRecord` crashes on initialization.
+## ✅ Tareas Completadas
+- [x] Configuración Inicial del Proyecto (Jetpack Compose).
+- [x] Implementación del Motor del Metrónomo (`AudioTrack`).
+- [x] Implementación del Motor del Afinador (`TarsosDSP` con acople personalizado).
+- [x] Navegación e Interfaz de Usuario (Material 3).
+- [x] Degradación de AGP/Gradle para compatibilidad con Android Studio.
+- [x] Refactorización del nombre de paquete de `com.example...` a `com.musicstudiosuite`.
+- [x] Desinstalación manual e instalación limpia en el dispositivo.
 
 ---
 
-## 🚀 Future Tasks
-- [ ] Implement multi-rhythm support for Metronome (3/4, 6/8).
-- [ ] Add Tone Generator module.
-- [ ] Implement dark/light mode toggle.
+## 🔍 Cola de Depuración (Activa)
+- [x] **Capturar Stack Trace:** Completado.
+- [x] **Prueba de Lanzador Mínimo:** ¡Éxito! La aplicación abre con `MinimalActivity`.
+- [ ] **Simplificación de MainActivity:** Volver a habilitar `MainActivity` con contenido mínimo para verificar la carga de clases.
+- [ ] **Reintegración de Componentes:** Agregar gradualmente el Tema, la Navegación y los Motores para identificar el componente que falla.
+- [ ] **Verificación de Hardware de Audio:** Verificar si `AudioTrack` o `AudioRecord` fallan en la inicialización.
 
 ---
 
-## 📝 User Notes
-*(User can edit this section externally)*
-- Device: Xiaomi / MIUI.
-- "Install via USB" option enabled in Developer Options.
+## 🚀 Tareas Futuras
+- [ ] Implementar soporte multi-ritmo para el Metrónomo (3/4, 6/8).
+- [ ] Agregar módulo Generador de Tonos.
+- [ ] Implementar alternancia de modo oscuro/claro.
+
+---
+
+## 📝 Notas del Usuario
+*(El usuario puede editar esta sección externamente)*
+- Dispositivo: Xiaomi / MIUI.
+- Opción "Instalar a través de USB" activada en las Opciones de Desarrollador.
