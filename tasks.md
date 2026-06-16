@@ -44,7 +44,7 @@ Lista de tareas específicas organizadas por módulos y capas arquitectónicas p
   * *Justificación:* Protección frente a ingeniería inversa y ofuscación de clases críticas de procesamiento de señal.
 
 ### 🔒 Capa de Datos y Seguridad (data / security)
-- [ ] **Crear el módulo o clase de persistencia segura (`SecurePreferencesManager`)**
+- [x] **Crear el módulo o clase de persistencia segura (`SecurePreferencesManager`)**
   * Crear la clase `SecurePreferencesManager.kt` para centralizar el guardado de configuración rítmica o Hz base del afinador.
   * Implementar el uso de `EncryptedSharedPreferences` delegando la creación de la clave maestra a `MasterKey`.
   * Reemplazar inicializaciones de `SharedPreferences` estándar.
@@ -60,14 +60,14 @@ Lista de tareas específicas organizadas por módulos y capas arquitectónicas p
   * Asegurar que la app solo valide la confirmación del token emitido por el SO, impidiendo almacenamiento local de huellas o rostros.
 
 ### ♿ Capa de Interfaz de Usuario y Accesibilidad (ui / components)
-- [ ] **Auditar e inyectar semántica para Lectores de Pantalla (TalkBack)**
+- [x] **Auditar e inyectar semántica para Lectores de Pantalla (TalkBack)**
   * Revisar [MetronomeScreen.kt](file:///D:/Pablo/Software/Development/Android/MusicStudioSuite/app/src/main/kotlin/com/musicstudiosuite/metronome/MetronomeScreen.kt) y [TunerScreen.kt](file:///D:/Pablo/Software/Development/Android/MusicStudioSuite/app/src/main/kotlin/com/musicstudiosuite/tuner/TunerScreen.kt).
   * Añadir el parámetro obligatorio `contentDescription` con strings explicativos en todos los elementos interactivos `IconButton`, `Slider` y en el Canvas gráfico.
-- [ ] **Garantizar la Escalabilidad del Texto (Responsive Text)**
+- [x] **Garantizar la Escalabilidad del Texto (Responsive Text)**
   * Auditar todos los archivos dentro del paquete `theme/` y componentes de pantalla.
   * Eliminar declaraciones de tamaño de texto forzada en unidades de pixeles absolutos o fijos.
   * Reemplazar por unidades de escala dinámicas `sp` para respetar la configuración nativa del sistema operativo.
-- [ ] **Expandir Dimensiones de Áreas Táctiles (Accesibilidad Motora)**
+- [x] **Expandir Dimensiones de Áreas Táctiles (Accesibilidad Motora)**
   * Modificar los modificadores (`Modifier`) de los botones de reproducción, incremento/decremento (`+` / `-`) y de `Tap Tempo`.
   * Usar `Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)` para cumplir con el estándar internacional.
   * Añadir padding para mitigar toques accidentales entre elementos adyacentes.

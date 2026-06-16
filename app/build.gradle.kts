@@ -85,4 +85,7 @@ dependencies {
   // Audio Processing
   implementation(libs.tarsosdsp.core)
   implementation(libs.tarsosdsp.jvm)
+
+  // Security
+  implementation(libs.androidx.security.crypto)
 }

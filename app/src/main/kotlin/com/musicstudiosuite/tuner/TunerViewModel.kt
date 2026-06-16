@@ -63,6 +63,13 @@ class TunerViewModel : ViewModel() {
         }
     }
 
+    fun stopListening() {
+        if (_isListening.value) {
+            engine.stopListening()
+            _isListening.value = false
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         engine.stopListening()

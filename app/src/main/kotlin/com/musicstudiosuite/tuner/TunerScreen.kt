@@ -28,6 +28,13 @@ fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
     val isListening by viewModel.isListening.collectAsState()
     val context = LocalContext.current
 
+    // Automatically stop listening when navigated away (disposed) to prevent battery drain
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.stopListening()
+        }
+    }
+
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -73,6 +80,7 @@ fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
                     launcher.launch(Manifest.permission.RECORD_AUDIO)
                 }
             },
+            modifier = Modifier.sizeIn(minWidth = 160.dp, minHeight = 48.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isListening) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
             )

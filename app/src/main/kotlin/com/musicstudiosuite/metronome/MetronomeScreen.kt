@@ -64,7 +64,10 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { viewModel.decrementBpm() }) {
+            IconButton(
+                onClick = { viewModel.decrementBpm() },
+                modifier = Modifier.padding(horizontal = 4.dp)
+            ) {
                 Icon(Icons.Default.Remove, contentDescription = "Decrease BPM")
             }
             
@@ -80,17 +83,22 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
                     }
             )
 
-            IconButton(onClick = { viewModel.incrementBpm() }) {
+            IconButton(
+                onClick = { viewModel.incrementBpm() },
+                modifier = Modifier.padding(horizontal = 4.dp)
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Increase BPM")
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Tap Tempo Button
+        // Tap Tempo Button (Tactile size expanded to 48dp minimum)
         OutlinedButton(
             onClick = { viewModel.tapTempo() },
-            modifier = Modifier.width(120.dp),
+            modifier = Modifier
+                .width(120.dp)
+                .sizeIn(minHeight = 48.dp),
             shape = CircleShape
         ) {
             Text("TAP", fontWeight = FontWeight.Bold)
