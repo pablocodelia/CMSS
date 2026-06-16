@@ -8,6 +8,7 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 class MetronomeEngine {
+    @Volatile
     private var bpm: Int = 120
     private var isPlaying: Boolean = false
     private var job: Job? = null
@@ -63,21 +64,38 @@ class MetronomeEngine {
 
         job = scope.launch(Dispatchers.Default) {
             var beatCount = 0
+            var nextBeatSample = 0L
+            var clickSampleIndex = -1
+            val bufferSize = 1024
+            val buffer = ShortArray(bufferSize)
+            var sampleCount = 0L
+
             while (isActive && isPlaying) {
-                val startTime = System.currentTimeMillis()
-                
-                // Play click
-                audioTrack.write(clickSound, 0, clickSound.size)
-                onBeat(beatCount % 4) // Assuming 4/4 for simple prototype
-                beatCount++
+                val currentBpm = bpm
+                val samplesPerBeat = (sampleRate * 60.0 / currentBpm).toLong()
 
-                val intervalMs = 60000L / bpm
-                val elapsedTime = System.currentTimeMillis() - startTime
-                val sleepTime = intervalMs - elapsedTime
+                for (i in 0 until bufferSize) {
+                    val currentSample = sampleCount + i
+                    if (currentSample >= nextBeatSample) {
+                        val beat = beatCount % 4
+                        scope.launch(Dispatchers.Main) {
+                            onBeat(beat)
+                        }
+                        beatCount++
+                        nextBeatSample += samplesPerBeat
+                        clickSampleIndex = 0
+                    }
 
-                if (sleepTime > 0) {
-                    delay(sleepTime)
+                    if (clickSampleIndex in clickSound.indices) {
+                        buffer[i] = clickSound[clickSampleIndex]
+                        clickSampleIndex++
+                    } else {
+                        buffer[i] = 0
+                    }
                 }
+
+                audioTrack.write(buffer, 0, buffer.size)
+                sampleCount += bufferSize
             }
         }
     }

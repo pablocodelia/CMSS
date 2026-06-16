@@ -22,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
     val bpm by viewModel.bpm.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val currentBeat by viewModel.currentBeat.collectAsState()
 
     Column(
         modifier = Modifier
@@ -39,21 +38,8 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Beat Indicators
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(4) { i ->
-                val isActive = i == currentBeat && isPlaying
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
-                )
-            }
-        }
+        // Beat Indicators (Isolated to prevent full-screen recomposition on every beat)
+        BeatIndicators(currentBeatFlow = viewModel.currentBeat, isPlayingFlow = viewModel.isPlaying)
 
         Spacer(modifier = Modifier.height(48.dp))
 
@@ -116,6 +102,30 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
             } else {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Play", modifier = Modifier.size(32.dp))
             }
+        }
+    }
+}
+
+@Composable
+fun BeatIndicators(
+    currentBeatFlow: kotlinx.coroutines.flow.StateFlow<Int>,
+    isPlayingFlow: kotlinx.coroutines.flow.StateFlow<Boolean>
+) {
+    val currentBeat by currentBeatFlow.collectAsState()
+    val isPlaying by isPlayingFlow.collectAsState()
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(4) { i ->
+            val isActive = i == currentBeat && isPlaying
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant)
+            )
         }
     }
 }

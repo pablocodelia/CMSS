@@ -23,7 +23,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
-    val result by viewModel.tuningResult.collectAsState()
     val isListening by viewModel.isListening.collectAsState()
     val context = LocalContext.current
 
@@ -50,23 +49,16 @@ fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Cents Gauge
-        CentsGauge(cents = result.cents, isDetected = result.isDetected)
+        // Cents Gauge (Isolated container to prevent full screen recompositions)
+        TunerGauge(tuningResultFlow = viewModel.tuningResult)
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Note Display
-        Text(
-            text = if (result.isDetected) result.note else "-",
-            fontSize = 100.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (result.isDetected && result.cents in -5f..5f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurface
-        )
+        // Note Display (Isolated container)
+        NoteDisplay(tuningResultFlow = viewModel.tuningResult)
 
-        Text(
-            text = if (result.isDetected) String.format("%.2f Hz", result.frequency) else "No sound detected",
-            style = MaterialTheme.typography.bodyLarge
-        )
+        // Frequency Display (Isolated container)
+        FrequencyDisplay(tuningResultFlow = viewModel.tuningResult)
 
         Spacer(modifier = Modifier.height(64.dp))
 
@@ -89,16 +81,41 @@ fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
 }
 
 @Composable
+fun TunerGauge(tuningResultFlow: kotlinx.coroutines.flow.StateFlow<TuningResult>) {
+    val result by tuningResultFlow.collectAsState()
+    CentsGauge(cents = result.cents, isDetected = result.isDetected)
+}
+
+@Composable
+fun NoteDisplay(tuningResultFlow: kotlinx.coroutines.flow.StateFlow<TuningResult>) {
+    val result by tuningResultFlow.collectAsState()
+    Text(
+        text = if (result.isDetected) result.note else "-",
+        fontSize = 100.sp,
+        fontWeight = FontWeight.Bold,
+        color = if (result.isDetected && result.cents in -5f..5f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurface
+    )
+}
+
+@Composable
+fun FrequencyDisplay(tuningResultFlow: kotlinx.coroutines.flow.StateFlow<TuningResult>) {
+    val result by tuningResultFlow.collectAsState()
+    Text(
+        text = if (result.isDetected) String.format("%.2f Hz", result.frequency) else "No sound detected",
+        style = MaterialTheme.typography.bodyLarge
+    )
+}
+
+@Composable
 fun CentsGauge(cents: Float, isDetected: Boolean) {
-    val animatedCents by animateFloatAsState(targetValue = if (isDetected) cents else 0f, label = "centsAnimation")
-    
+    // We removed animateFloatAsState to eliminate 60fps animation overhead.
+    // The raw pitch detection updates at 21 times/sec, providing smooth, real-time feedback with zero visual lag.
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp),
         contentAlignment = Alignment.Center
     ) {
-        val primaryColor = MaterialTheme.colorScheme.primary
         val onSurfaceColor = MaterialTheme.colorScheme.onSurfaceVariant
 
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -129,8 +146,8 @@ fun CentsGauge(cents: Float, isDetected: Boolean) {
 
             // Draw needle
             if (isDetected) {
-                val needleX = centerX + (animatedCents / 50f) * (width / 2)
-                val needleColor = if (animatedCents in -5f..5f) Color(0xFF4CAF50) else Color.Red
+                val needleX = centerX + (cents / 50f) * (width / 2)
+                val needleColor = if (cents in -5f..5f) Color(0xFF4CAF50) else Color.Red
                 drawLine(
                     color = needleColor,
                     start = Offset(needleX, centerY - 50.dp.toPx()),

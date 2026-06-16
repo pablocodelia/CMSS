@@ -16,8 +16,8 @@ Codelia Music Study Suite (CMSS) es una aplicación de herramientas de alto rend
 ### 🎸 Afinador Cromático
 *   **Estimación de Tono YIN**: Integra el algoritmo de detección de tono YIN de alta precisión (a través de `TarsosDSP`) para un análisis de frecuencia rápido y preciso en tiempo real.
 *   **Captura de Audio de Bajo Nivel**: Configura la API `AudioRecord` de Android para dirigir los flujos de audio directamente al motor DSP a una frecuencia de muestreo de 22050Hz.
-*   **Indicador de Centésimas Interactivo**: Utiliza Jetpack Compose Canvas para dibujar un indicador de aguja dinámico que muestra la desviación de bemol/sostenido dentro de un rango de $\pm$50 centésimas (cents).
-*   **Retroalimentación de Afinación**: El indicador de nota se vuelve verde y centra la aguja cuando la nota está afinada (dentro de $\pm$5 centésimas).
+*   **Indicador de Centésimas Interactivo**: Utiliza Jetpack Compose Canvas para dibujar un indicador de aguja dinámico que muestra la desviación de bemol/sostenido dentro de un rango de 50 centésimas (cents).
+*   **Retroalimentación de Afinación**: El indicador de nota se vuelve verde y centra la aguja cuando la nota está afinada (dentro de 5 centésimas).
 *   **Gestión de Permisos**: Solicita de manera fluida el permiso de micrófono `RECORD_AUDIO` en tiempo de ejecución.
 
 ---
@@ -79,7 +79,6 @@ app/src/main/kotlin/com/musicstudiosuite/
 ---
 
 ## 📋 Hoja de Ruta y Próximas Funciones
-*   [ ] Agregar selección de compás (por ejemplo, 3/4, 6/8) y sonidos de pulso acentuado.
-*   [ ] Integrar diagramas de acordes y visualizadores de diapasón para guitarra/ukelele.
-*   [ ] Agregar tablas de escalas para practicar la improvisación.
-*   [ ] Ajustes preestablecidos de afinación personalizados (Drop D, medio tono abajo, Open G, etc.).
+*   [ ] Agregar selección de compás (por ejemplo, 3/4, 6/8).
+*   [ ] Implementar almacenamiento de patrónes rítmicos.
+*   [ ] Patrones con diferentes tiempos, por ejemplo tocar 20 compases que inicien en 80 bpm y terminar en 120bpm
