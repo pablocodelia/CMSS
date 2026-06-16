@@ -18,6 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -83,17 +85,65 @@ fun TunerScreen(viewModel: TunerViewModel = viewModel()) {
 @Composable
 fun TunerGauge(tuningResultFlow: kotlinx.coroutines.flow.StateFlow<TuningResult>) {
     val result by tuningResultFlow.collectAsState()
-    CentsGauge(cents = result.cents, isDetected = result.isDetected)
+    
+    val centsInt = result.cents.toInt()
+    val centsAbs = if (centsInt < 0) -centsInt else centsInt
+    val accessibilityDescription = when {
+        !result.isDetected -> "Afinador inactivo, esperando sonido"
+        result.cents in -5f..5f -> "Afinado. Nota ${result.note} exacta"
+        result.cents < -5f -> "Nota ${result.note} calada por $centsAbs centésimas, bemol"
+        else -> "Nota ${result.note} alta por $centsAbs centésimas, sostenido"
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .semantics {
+                contentDescription = accessibilityDescription
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        CentsGauge(cents = result.cents, isDetected = result.isDetected)
+    }
 }
 
 @Composable
 fun NoteDisplay(tuningResultFlow: kotlinx.coroutines.flow.StateFlow<TuningResult>) {
     val result by tuningResultFlow.collectAsState()
+    
+    val notaLimpia = result.note.replace("[0-9]".toRegex(), "")
+    val octava = result.note.replace("[^0-9]".toRegex(), "")
+    val nombreNota = when (notaLimpia) {
+        "C" -> "Do"
+        "C#" -> "Do sostenido"
+        "D" -> "Re"
+        "D#" -> "Re sostenido"
+        "E" -> "Mi"
+        "F" -> "Fa"
+        "F#" -> "Fa sostenido"
+        "G" -> "Sol"
+        "G#" -> "Sol sostenido"
+        "A" -> "La"
+        "A#" -> "La sostenido"
+        "B" -> "Si"
+        else -> notaLimpia
+    }
+    
+    val accessibilityNote = if (result.isDetected) {
+        if (octava.isNotEmpty()) "Nota detectada: $nombreNota, octava $octava" else "Nota detectada: $nombreNota"
+    } else {
+        "Ninguna nota detectada"
+    }
+
     Text(
         text = if (result.isDetected) result.note else "-",
         fontSize = 100.sp,
         fontWeight = FontWeight.Bold,
-        color = if (result.isDetected && result.cents in -5f..5f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurface
+        color = if (result.isDetected && result.cents in -5f..5f) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.semantics {
+            contentDescription = accessibilityNote
+        }
     )
 }
 

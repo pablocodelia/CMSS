@@ -16,6 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
@@ -66,7 +72,12 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
                 value = bpm.toFloat(),
                 onValueChange = { viewModel.setBpm(it.toInt()) },
                 valueRange = 40f..300f,
-                modifier = Modifier.width(200.dp)
+                modifier = Modifier
+                    .width(200.dp)
+                    .semantics {
+                        contentDescription = "Deslizador de velocidad del metrónomo"
+                        stateDescription = "$bpm pulsos por minuto"
+                    }
             )
 
             IconButton(onClick = { viewModel.incrementBpm() }) {
@@ -90,7 +101,11 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
         // Play/Stop Button
         Button(
             onClick = { viewModel.togglePlayback() },
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier
+                .size(80.dp)
+                .clearAndSetSemantics {
+                    contentDescription = if (isPlaying) "Detener metrónomo" else "Iniciar metrónomo"
+                },
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isPlaying) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
@@ -100,7 +115,7 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = viewModel()) {
                 // Stop icon (simple box)
                 Box(modifier = Modifier.size(24.dp).background(Color.White))
             } else {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(32.dp))
             }
         }
     }
@@ -116,7 +131,12 @@ fun BeatIndicators(
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .semantics(mergeDescendants = true) {
+                contentDescription = if (isPlaying) "Compás actual: ${currentBeat + 1} de 4" else "Indicador de compás inactivo"
+                liveRegion = LiveRegionMode.Polite
+            }
     ) {
         repeat(4) { i ->
             val isActive = i == currentBeat && isPlaying
